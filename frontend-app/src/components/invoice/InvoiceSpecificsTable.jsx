@@ -1,6 +1,26 @@
-// components/InvoiceSpecificsTable.jsx
+import { useState } from "react";
+import { Check, X } from "lucide-react";
 
 export const InvoiceSpecificsTable = ({ products = [] }) => {
+  const [editIndex, setEditIndex] = useState(null);
+  const [editValue, setEditValue] = useState("");
+
+  const startEditing = (index, value) => {
+    setEditIndex(index);
+    setEditValue(value);
+  };
+
+  const saveEdit = (index) => {
+    products[index].name = editValue;
+    setEditIndex(null);
+    setEditValue("");
+  };
+
+  const cancelEdit = () => {
+    setEditIndex(null);
+    setEditValue("");
+  };
+
   if (!products.length) {
     return (
       <div className="text-sm text-muted-foreground py-8 text-center">
@@ -10,21 +30,53 @@ export const InvoiceSpecificsTable = ({ products = [] }) => {
   }
 
   return (
-    <div className="border rounded-md overflow-x-auto">
-      <table className="w-full text-sm text-left border-collapse">
-        <thead className="bg-gray-50 border-b">
+    <div className="border border-border overflow-x-auto rounded-md bg-white custom-scrollbar">
+      <table className="min-w-[700px] w-full text-sm border-collapse">
+        <thead className="bg-[#f9fafb] text-[#6b7280] border-b">
           <tr>
-            <th className="px-4 py-2 font-medium text-gray-700"># Product</th>
-            <th className="px-4 py-2 font-medium text-gray-700">Product Name</th>
-            <th className="px-4 py-2 font-medium text-gray-700">Unit Price</th>
+            <th className="text-left px-5 py-3 font-medium whitespace-nowrap"># Product</th>
+            <th className="text-left px-5 py-3 font-medium whitespace-nowrap">Product Name</th>
+            <th className="text-left px-5 py-3 font-medium whitespace-nowrap">Unit Price</th>
           </tr>
         </thead>
         <tbody>
           {products.map((item, idx) => (
-            <tr key={idx} className="border-b hover:bg-gray-50">
-              <td className="px-4 py-2">{item.code}</td>
-              <td className="px-4 py-2">{item.name}</td>
-              <td className="px-4 py-2">{item.price}</td>
+            <tr key={idx} className="border-b hover:bg-gray-50 transition">
+              <td className="px-5 py-3 text-sm text-gray-900 whitespace-nowrap">{item.code}</td>
+              <td className="px-5 py-3 text-sm text-gray-900 whitespace-nowrap">
+                {editIndex === idx ? (
+                  <div className="relative">
+                    <input
+                      value={editValue}
+                      onChange={(e) => setEditValue(e.target.value)}
+                      className="border border-gray-300 rounded-md px-3 py-2 text-sm w-full"
+                      autoFocus
+                    />
+                    <div className="absolute top-1/2 -translate-y-1/2 right-2 z-10 flex gap-2">
+                      <button
+                        onClick={() => saveEdit(idx)}
+                        className="p-1.5 text-green-600 hover:text-green-800"
+                      >
+                        <Check size={16} />
+                      </button>
+                      <button
+                        onClick={cancelEdit}
+                        className="p-1.5 text-red-600 hover:text-red-800"
+                      >
+                        <X size={16} />
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    className="cursor-pointer"
+                    onClick={() => startEditing(idx, item.name)}
+                  >
+                    {item.name}
+                  </div>
+                )}
+              </td>
+              <td className="px-5 py-3 text-sm text-gray-900 whitespace-nowrap">{item.price}</td>
             </tr>
           ))}
         </tbody>

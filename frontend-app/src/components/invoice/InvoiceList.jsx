@@ -36,6 +36,7 @@ export const InvoiceList = ({ invoices, onSelectInvoice, selectedInvoiceId }) =>
 
   return (
     <div className="flex flex-col h-full bg-white">
+      {/* Search */}
       <div className="px-4 pt-4 pb-3">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
@@ -48,8 +49,8 @@ export const InvoiceList = ({ invoices, onSelectInvoice, selectedInvoiceId }) =>
         </div>
       </div>
 
-      {/* Invoice List */}
-      <div className="flex-1 overflow-y-auto px-4 pb-6 space-y-2">
+      {/* Invoice Cards */}
+      <div className="flex-1 overflow-y-auto pb-6 space-y-2 pr-2">
         {filteredInvoices.length === 0 ? (
           <div className="text-sm text-muted-foreground text-center pt-4">
             No results found.
@@ -59,10 +60,10 @@ export const InvoiceList = ({ invoices, onSelectInvoice, selectedInvoiceId }) =>
             <div
               key={invoice.id}
               onClick={() => onSelectInvoice(invoice)}
-              className={`p-4 border rounded-lg cursor-pointer transition-colors ${
+              className={`flex flex-col cursor-pointer transition-colors ${
                 selectedInvoiceId === invoice.id
-                  ? "border-primary bg-primary/5 border-l-4 border-l-primary"
-                  : "border-border hover:bg-muted/50"
+                  ? "border-l-4 border-blue-600 bg-blue-50 pl-3 pr-4 py-3 rounded-r-lg"
+                  : "pl-4 pr-4 py-3 border border-border rounded-lg hover:bg-muted/50"
               }`}
             >
               <div className="flex items-start justify-between mb-1">
@@ -79,9 +80,11 @@ export const InvoiceList = ({ invoices, onSelectInvoice, selectedInvoiceId }) =>
                 </div>
                 <span className="text-xs text-muted-foreground">{invoice.date}</span>
               </div>
+
               <h3 className="font-medium text-sm text-foreground mb-1">
                 {invoice.company}
               </h3>
+
               <div className="text-xs text-muted-foreground space-x-4">
                 <span>📋 {invoice.poNumber}</span>
                 <span>💼 {invoice.jobNumber}</span>

@@ -5,18 +5,15 @@ import {
   Archive as ArchiveIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button.jsx";
-import { Input } from "@/components/ui/input.jsx";
-import { Label } from "@/components/ui/label.jsx";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select.jsx";
-import { XeroDestination } from "./XeroDestination";
+import { Summary } from "./Summary.jsx";
+import { InvoiceSpecificsTable } from "./InvoiceSpecificsTable.jsx";
+import { POList } from "./POlist.jsx";
+import { QuoteList } from "./QuoteList.jsx";
+import { JobList } from "./JobList.jsx";
+import { EmailList } from "./Emaillist.jsx";
+import { PriceTrend } from "./PriceTrend.jsx";
 
-export const InvoiceDetails = ({ invoice, onNext, onPrev }) => {
+export const InvoiceDetails = ({ invoice, onNext, onPrev, activeTab, onTabChange }) => {
   if (!invoice) {
     return (
       <div className="flex items-center justify-center h-full text-muted-foreground">
@@ -30,12 +27,55 @@ export const InvoiceDetails = ({ invoice, onNext, onPrev }) => {
     );
   }
 
+  const tabs = [
+    "Summary",
+    "Invoice Specifics",
+    "PO",
+    "Quotes",
+    "Jobs",
+    "Emails",
+    "Price Trend",
+  ];
+
   const statusStyles = {
     "Manual Review": "bg-yellow-50 text-yellow-800 border-yellow-100",
     "Processing": "bg-blue-50 text-blue-800 border-blue-100",
     "Approved": "bg-emerald-50 text-emerald-800 border-emerald-100",
     "AI Approved": "bg-green-50 text-green-800 border-green-100",
     "Flagged": "bg-red-50 text-red-800 border-red-100",
+  };
+
+  const handlePrevTab = () => {
+    const currentIndex = tabs.indexOf(activeTab);
+    if (currentIndex > 0) {
+      onTabChange(tabs[currentIndex - 1]);
+    }
+  };
+
+  const handleNextTab = () => {
+    const currentIndex = tabs.indexOf(activeTab);
+    if (currentIndex < tabs.length - 1) {
+      onTabChange(tabs[currentIndex + 1]);
+    }
+  };
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case "Invoice Specifics":
+        return <InvoiceSpecificsTable products={invoice.products || []} />;
+      case "PO":
+        return <POList pos={invoice.pos || []} />;
+      case "Quotes":
+        return <QuoteList quotes={invoice.quotes || []} />;
+      case "Jobs":
+        return <JobList jobs={invoice.jobs || []} />;
+      case "Emails":
+        return <EmailList emails={invoice.emails || []} />;
+      case "Price Trend":
+        return <PriceTrend />;
+      default:
+        return <Summary invoice={invoice} />;
+    }
   };
 
   return (
@@ -45,45 +85,50 @@ export const InvoiceDetails = ({ invoice, onNext, onPrev }) => {
         <div className="flex items-center justify-between px-6 pt-6 pb-3">
           <div className="flex items-center gap-3">
             <h2 className="text-lg font-semibold text-foreground">
-              INV #{invoice.invoiceNumber || "5460930"}
+              INV #{invoice.invoiceNumber}
             </h2>
             {invoice.status && (
               <span
-                className={`text-xs px-2 py-1 rounded-full border font-medium ${statusStyles[invoice.status] ||
+                className={`text-xs px-2 py-1 rounded-full border font-medium ${
+                  statusStyles[invoice.status] ||
                   "bg-gray-100 text-gray-700 border-gray-300"
-                  }`}
+                }`}
               >
                 {invoice.status}
               </span>
             )}
           </div>
           <div className="flex items-center gap-2">
-            <Button onClick={onPrev} variant="ghost" size="sm" className="h-8 w-8 p-0">
-              <ChevronLeft className="w-4 h-4" />
+            <Button
+              onClick={handlePrevTab}
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 p-0 border border-gray-300 rounded-md hover:bg-gray-100"
+            >
+              <ChevronLeft className="w-4 h-4 text-gray-700" />
             </Button>
-            <Button onClick={onNext} variant="ghost" size="sm" className="h-8 w-8 p-0">
-              <ChevronRight className="w-4 h-4" />
+            <Button
+              onClick={handleNextTab}
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 p-0 border border-gray-300 rounded-md hover:bg-gray-100"
+            >
+              <ChevronRight className="w-4 h-4 text-gray-700" />
             </Button>
           </div>
         </div>
 
         {/* Tabs */}
         <div className="flex items-center gap-6 px-6 text-sm overflow-x-auto">
-          {[
-            "Summary",
-            "Invoice Specifics",
-            "PO",
-            "Quotes",
-            "Jobs",
-            "Emails",
-            "Price Trend",
-          ].map((tab, idx) => (
+          {tabs.map((tab) => (
             <button
               key={tab}
-              className={`py-3 transition-colors font-medium border-b-2 ${idx === 0
-                ? "text-primary border-primary"
-                : "text-muted-foreground border-transparent hover:text-foreground"
-                }`}
+              onClick={() => onTabChange(tab)}
+              className={`py-3 transition-colors font-medium border-b-2 ${
+                activeTab === tab
+                  ? "text-[#6366f1] border-[#6366f1]"
+                  : "text-muted-foreground border-transparent hover:text-foreground"
+              }`}
             >
               {tab}
             </button>
@@ -91,142 +136,24 @@ export const InvoiceDetails = ({ invoice, onNext, onPrev }) => {
         </div>
       </div>
 
-      {/* Form */}
-      <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4 text-sm">
-        <div>
-          <Label>Document Type *</Label>
-          <Select defaultValue="invoice">
-            <SelectTrigger className="mt-1 h-9 text-sm">
-              <SelectValue placeholder="Select type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="invoice">Invoice</SelectItem>
-              <SelectItem value="quote">Quote</SelectItem>
-              <SelectItem value="receipt">Receipt</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div>
-          <Label>Supplier *</Label>
-          <Input defaultValue={invoice?.supplier} className="h-9" />
-        </div>
-
-        <div>
-          <Label>Invoice / Ref # *</Label>
-          <Input defaultValue={invoice?.invoiceNumber} className="h-9" />
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <Label>Date *</Label>
-            <div className="relative">
-              <Input defaultValue="2025-06-20" className="pr-8 h-9" />
-              <Calendar className="absolute right-3 top-2.5 w-4 h-4 text-muted-foreground" />
-            </div>
-          </div>
-          <div>
-            <Label>Due Date *</Label>
-            <div className="relative">
-              <Input defaultValue="2025-06-20" className="pr-8 h-9" />
-              <Calendar className="absolute right-3 top-2.5 w-4 h-4 text-muted-foreground" />
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <Label>Total Amount *</Label>
-            <Input defaultValue="$1,337.36" className="h-9" />
-          </div>
-          <div>
-            <Label>Currency</Label>
-            <Select defaultValue="AUD">
-              <SelectTrigger className="mt-1 h-9 text-sm">
-                <SelectValue placeholder="Select currency" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="AUD">AUD</SelectItem>
-                <SelectItem value="USD">USD</SelectItem>
-                <SelectItem value="EUR">EUR</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        <div>
-          <Label>Tax Rate</Label>
-          <Select defaultValue="GST on Expenses 10%">
-            <SelectTrigger className="mt-1 h-9 text-sm">
-              <SelectValue placeholder="Select tax" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="GST on Expenses 10%">
-                GST on Expenses 10%
-              </SelectItem>
-              <SelectItem value="GST Free">GST Free</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <Label>Subtotal</Label>
-            <Input defaultValue="1,215.78" className="h-9" />
-          </div>
-          <div>
-            <Label>Tax</Label>
-            <Input defaultValue="121.78" className="h-9" />
-          </div>
-        </div>
-
-        <div>
-          <Label className="font-semibold text-base">Total</Label>
-          <Input defaultValue="1,337.36 AUD" className="h-10 font-semibold text-lg" />
-        </div>
-
-        <div className="space-y-4 text-sm">
-          {/* Tags */}
-          <div>
-            <Label>Tags</Label>
-            <Input placeholder="Type tag & hit ↵ to add" className="h-9" />
-            <div className="flex flex-wrap gap-2 mt-2 text-xs">
-              {["Defaulter", "Paid", "Defaulter", "Paid"].map((tag, i) => (
-                <span
-                  key={i}
-                  className="px-2 py-1 bg-muted border border-border rounded-full"
-                >
-                  {tag} ✕
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* Destinations Header */}
-          <div className="border rounded-md bg-white p-4">
-            <XeroDestination />
-           
-          </div>
-        </div>
-
+      {/* Body */}
+      <div className="flex-1 overflow-y-auto px-6 py-4 text-sm">
+        {renderTabContent()}
       </div>
 
       {/* Footer */}
-      <div className="border-t border-border px-6 py-4 flex justify-between">
-        <Button
-          variant="ghost"
-          className="text-red-600 hover:bg-red-50 text-sm flex items-center gap-2"
-        >
+      <div className="border-t border-border px-6 py-4 flex justify-between items-center">
+        <button className="flex items-center gap-2 text-sm text-red-600 hover:bg-red-50 px-3 py-2 rounded-md border border-transparent">
           <ArchiveIcon className="w-4 h-4" />
           Archive
-        </Button>
+        </button>
         <div className="flex gap-2">
-          <Button variant="outline" className="text-sm">
+          <button className="text-sm border px-4 py-2 rounded-md hover:bg-gray-100">
             Mark as Paid
-          </Button>
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white text-sm">
+          </button>
+          <button className="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-md">
             Verify & Publish
-          </Button>
+          </button>
         </div>
       </div>
     </div>
