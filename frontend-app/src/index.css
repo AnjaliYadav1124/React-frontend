@@ -129,3 +129,10 @@
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background-color: #9ca3af;
 }
+.custom-scroll {
+  scrollbar-width: none;           /* Firefox */
+  -ms-overflow-style: none;        /* IE/Edge */
+}
+.custom-scroll::-webkit-scrollbar {
+  display: none;                   /* Chrome/Safari */
+}

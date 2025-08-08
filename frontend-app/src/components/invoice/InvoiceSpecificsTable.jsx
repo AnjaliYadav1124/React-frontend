@@ -30,8 +30,8 @@ export const InvoiceSpecificsTable = ({ products = [] }) => {
   }
 
   return (
-    <div className="border border-border overflow-x-auto rounded-md bg-white custom-scrollbar">
-      <table className="min-w-[700px] w-full text-sm border-collapse">
+    <div className="border border-border overflow-x-auto rounded-md bg-white">
+      <table className="min-w-[500px] w-full text-sm border-collapse">
         <thead className="bg-[#f9fafb] text-[#6b7280] border-b">
           <tr>
             <th className="text-left px-5 py-3 font-medium whitespace-nowrap"># Product</th>
@@ -52,7 +52,7 @@ export const InvoiceSpecificsTable = ({ products = [] }) => {
                       className="border border-gray-300 rounded-md px-3 py-2 text-sm w-full"
                       autoFocus
                     />
-                    <div className="absolute top-1/2 -translate-y-1/2 right-2 z-10 flex gap-2">
+                    <div className="absolute top-full right-0 mt-1 z-10 bg-white border rounded-md shadow-md flex">
                       <button
                         onClick={() => saveEdit(idx)}
                         className="p-1.5 text-green-600 hover:text-green-800"

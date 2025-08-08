@@ -47,7 +47,7 @@ export const PriceTrend = () => {
         </div>
       </div>
 
-      {/* ✅ Scrollable Chart Wrapper */}
+      {/*  Scrollable Chart Wrapper */}
       <div className="overflow-x-auto">
         <div className="min-w-[700px] h-[200px]">
           <ResponsiveContainer width="100%" height="100%">

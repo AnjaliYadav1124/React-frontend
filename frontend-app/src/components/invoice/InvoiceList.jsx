@@ -50,7 +50,7 @@ export const InvoiceList = ({ invoices, onSelectInvoice, selectedInvoiceId }) =>
       </div>
 
       {/* Invoice Cards */}
-      <div className="flex-1 overflow-y-auto pb-6 space-y-2 pr-2">
+      <div className="flex-1 overflow-y-auto pb-6 space-y-2 pr-2 scrollbar-hide">
         {filteredInvoices.length === 0 ? (
           <div className="text-sm text-muted-foreground text-center pt-4">
             No results found.

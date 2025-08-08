@@ -122,7 +122,7 @@ export const Summary = ({ invoice }) => {
       </div>
 
       <div className="space-y-4 text-sm mt-4">
-        {/* ✅ TAGS */}
+        {/*  TAGS */}
         <div>
           <Label>Tags</Label>
           <Input
@@ -147,7 +147,7 @@ export const Summary = ({ invoice }) => {
           </div>
         </div>
 
-        {/* ✅ Xero Component */}
+        {/*  Xero Component */}
         <div className="border rounded-md bg-white p-4">
           <XeroDestination />
         </div>

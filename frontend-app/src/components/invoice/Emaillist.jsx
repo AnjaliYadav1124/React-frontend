@@ -1,4 +1,3 @@
-// components/EmailList.jsx
 import { useState } from "react";
 import { CalendarDays, ChevronDown, ChevronUp } from "lucide-react";
 
@@ -21,14 +20,19 @@ export const EmailList = ({ emails = [] }) => {
     <div className="space-y-4">
       {emails.map((email, idx) => {
         const isOpen = openIndex === idx;
+
         return (
-          <div key={idx} className="border border-border rounded-md">
+          <div
+            key={idx}
+            className="border border-border rounded-md bg-white shadow-sm"
+          >
+            {/* Header */}
             <div
               onClick={() => toggle(idx)}
               className="cursor-pointer p-4 flex items-start justify-between"
             >
               <div>
-                <div className="font-medium text-sm text-foreground mb-0.5">
+                <div className="font-medium text-[15px] text-foreground mb-1">
                   {email.subject}
                 </div>
                 <div className="text-xs text-muted-foreground flex items-center gap-2">
@@ -36,26 +40,44 @@ export const EmailList = ({ emails = [] }) => {
                   {email.date} ・ {email.time}
                 </div>
               </div>
+
+              {/* Dropdown Button */}
               <div className="mt-1">
-                {isOpen ? (
-                  <ChevronUp className="w-5 h-5 text-muted-foreground" />
-                ) : (
-                  <ChevronDown className="w-5 h-5 text-muted-foreground" />
-                )}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggle(idx);
+                  }}
+                  className="w-7 h-7 flex items-center justify-center rounded-full border border-gray-200 bg-gray-50 shadow-sm hover:bg-gray-100 transition"
+                >
+                  {isOpen ? (
+                    <ChevronUp className="w-4 h-4 text-gray-600" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4 text-gray-600" />
+                  )}
+                </button>
               </div>
             </div>
 
+            {/* Expanded content */}
             {isOpen && (
-              <div className="px-4 pb-4 text-sm text-gray-700 space-y-4">
-                <div>
-                  <div className="text-xs text-muted-foreground">From</div>
-                  <div>{email.from}</div>
+              <div className="border-t px-4 py-4 text-sm text-foreground space-y-4">
+                {/* From Row */}
+                <div className="flex items-start gap-4">
+                  <div className="w-10 text-xs text-muted-foreground pt-0.5">From</div>
+                  <div className="text-sm font-medium">{email.from}</div>
                 </div>
-                <div>
-                  <div className="text-xs text-muted-foreground">To</div>
-                  <div>{email.to}</div>
+
+                {/* To Row */}
+                <div className="flex items-start gap-4">
+                  <div className="w-10 text-xs text-muted-foreground pt-0.5">To</div>
+                  <div className="text-sm font-medium">{email.to}</div>
                 </div>
-                <div className="border-t pt-3">{email.body}</div>
+
+                {/* Body */}
+                <div className="pt-3 border-t text-sm leading-6 whitespace-pre-line text-gray-800">
+                  {email.body}
+                </div>
               </div>
             )}
           </div>

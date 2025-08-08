@@ -144,6 +144,22 @@ const Index = () => {
 ],
 emails: [
   {
+    subject: "Invoice Summary for Project Delta-2023",
+    date: "Jan 8, 2022",
+    time: "11:11 AM",
+    from: "smerigan@psccgib.com.au",
+    to: "deepaksingh@gradianproject.com",
+    body: "This is a placeholder summary for Delta-2023. Kindly review.",
+  },
+  {
+    subject: "Invoice Summary for Project Delta-2023",
+    date: "Jan 8, 2022",
+    time: "11:11 AM",
+    from: "smerigan@psccgib.com.au",
+    to: "deepaksingh@gradianproject.com",
+    body: "This is a placeholder summary for Delta-2023. Kindly review.",
+  },
+  {
     subject: "Invoice Details for Project Alpha-2023",
     date: "Jan 8, 2022",
     time: "11:11 AM",
@@ -158,22 +174,6 @@ Also attached is a proposal form from CGU in relation to your Professional Indem
 Please let me know if you have any questions.
 
 Thank you.`,
-  },
-  {
-    subject: "Invoice Summary for Project Delta-2023",
-    date: "Jan 8, 2022",
-    time: "11:11 AM",
-    from: "smerigan@psccgib.com.au",
-    to: "deepaksingh@gradianproject.com",
-    body: "This is a placeholder summary for Delta-2023. Kindly review.",
-  },
-  {
-    subject: "Billing Information for Project Delta-2023",
-    date: "Jan 8, 2022",
-    time: "11:11 AM",
-    from: "smerigan@psccgib.com.au",
-    to: "deepaksingh@gradianproject.com",
-    body: "Please see attached billing documents for final submission.",
   },
 ],
 },
@@ -1149,6 +1149,13 @@ Thank you.`,
 ],
     },
   ];
+
+  useEffect(() => {
+  if (invoices.length > 0) {
+    setSelectedInvoice(invoices[0]);
+  }
+}, []);
+
 
   useEffect(() => {
     const handleMouseMove = (e) => {
