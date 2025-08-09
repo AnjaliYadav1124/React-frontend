@@ -17,7 +17,7 @@ export const EmailList = ({ emails = [] }) => {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4"> 
       {emails.map((email, idx) => {
         const isOpen = openIndex === idx;
 
@@ -26,7 +26,7 @@ export const EmailList = ({ emails = [] }) => {
             key={idx}
             className="border border-border rounded-md bg-white shadow-sm"
           >
-            {/* Header */}
+            
             <div
               onClick={() => toggle(idx)}
               className="cursor-pointer p-4 flex items-start justify-between"
@@ -41,7 +41,6 @@ export const EmailList = ({ emails = [] }) => {
                 </div>
               </div>
 
-              {/* Dropdown Button */}
               <div className="mt-1">
                 <button
                   onClick={(e) => {
@@ -59,22 +58,21 @@ export const EmailList = ({ emails = [] }) => {
               </div>
             </div>
 
-            {/* Expanded content */}
             {isOpen && (
               <div className="border-t px-4 py-4 text-sm text-foreground space-y-4">
-                {/* From Row */}
+                
                 <div className="flex items-start gap-4">
                   <div className="w-10 text-xs text-muted-foreground pt-0.5">From</div>
                   <div className="text-sm font-medium">{email.from}</div>
                 </div>
 
-                {/* To Row */}
+               
                 <div className="flex items-start gap-4">
                   <div className="w-10 text-xs text-muted-foreground pt-0.5">To</div>
                   <div className="text-sm font-medium">{email.to}</div>
                 </div>
 
-                {/* Body */}
+                
                 <div className="pt-3 border-t text-sm leading-6 whitespace-pre-line text-gray-800">
                   {email.body}
                 </div>

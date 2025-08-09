@@ -6,37 +6,69 @@ import { Badge } from "@/components/ui/badge.jsx";
 const getStatusClass = (status) => {
   switch (status) {
     case "Processing":
-      return "bg-blue-100 text-blue-700";
+      return "bg-purple-50 text-purple-600 border border-purple-200 rounded-full";
     case "Manual Review":
-      return "bg-yellow-100 text-yellow-700";
+      return "bg-yellow-50 text-yellow-600 border border-yellow-200 rounded-full";
     case "Approved":
-      return "bg-emerald-100 text-emerald-700";
+      return "bg-sky-50 text-sky-600 border border-sky-200 rounded-full"; 
     case "AI Approved":
-      return "bg-green-100 text-green-700";
+      return "bg-green-50 text-green-600 border border-green-200 rounded-full";
     case "Flagged":
-      return "bg-red-100 text-red-700";
+      return "bg-red-50 text-red-600 border border-red-200 rounded-full";
     default:
-      return "bg-gray-100 text-gray-700";
+      return "bg-gray-50 text-gray-600 border border-gray-200 rounded-full";
   }
 };
 
-export const InvoiceList = ({ invoices, onSelectInvoice, selectedInvoiceId }) => {
+export const InvoiceList = ({
+  invoices,
+  onSelectInvoice,
+  selectedInvoiceId,
+  activeTab, 
+}) => {
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredInvoices = invoices.filter((invoice) => {
+ 
+  const tabFilteredInvoices = invoices.filter((invoice) => {
+    const status = (invoice.status || "").toLowerCase().trim();
+
+    if (!activeTab || activeTab === "All") return true;
+
+    if (activeTab === "Review") {
+     
+      return (
+        status === "manual review" ||
+        status.includes("manual review") ||
+        (status.includes("manual") && status.includes("review"))
+      );
+    }
+
+    if (activeTab === "Approved") {
+      
+      return status.includes("approved");
+    }
+
+    if (activeTab === "Archived") {
+      return status.includes("archived");
+    }
+
+
+    return true;
+  });
+
+  const filteredInvoices = tabFilteredInvoices.filter((invoice) => {
     const term = searchTerm.toLowerCase();
     return (
-      invoice.company.toLowerCase().includes(term) ||
-      invoice.poNumber.toLowerCase().includes(term) ||
-      invoice.jobNumber.toLowerCase().includes(term) ||
-      invoice.status.toLowerCase().includes(term) ||
-      invoice.date.toLowerCase().includes(term)
+      invoice.company?.toLowerCase().includes(term) ||
+      invoice.poNumber?.toLowerCase().includes(term) ||
+      invoice.jobNumber?.toLowerCase().includes(term) ||
+      invoice.status?.toLowerCase().includes(term) ||
+      invoice.date?.toLowerCase().includes(term)
     );
   });
 
   return (
     <div className="flex flex-col h-full bg-white">
-      {/* Search */}
       <div className="px-4 pt-4 pb-3">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
@@ -49,7 +81,7 @@ export const InvoiceList = ({ invoices, onSelectInvoice, selectedInvoiceId }) =>
         </div>
       </div>
 
-      {/* Invoice Cards */}
+    
       <div className="flex-1 overflow-y-auto pb-6 space-y-2 pr-2 scrollbar-hide">
         {filteredInvoices.length === 0 ? (
           <div className="text-sm text-muted-foreground text-center pt-4">

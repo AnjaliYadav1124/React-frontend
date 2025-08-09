@@ -1,19 +1,21 @@
 import {
-  Calendar,
   ChevronLeft,
   ChevronRight,
   Archive as ArchiveIcon,
 } from "lucide-react";
-import { Button } from "@/components/ui/button.jsx";
 import { Summary } from "./Summary.jsx";
 import { InvoiceSpecificsTable } from "./InvoiceSpecificsTable.jsx";
-import { POList } from "./POlist.jsx";
-import { QuoteList } from "./QuoteList.jsx";
-import { JobList } from "./JobList.jsx";
+import { ConnectedList } from "./ConnectedList.jsx";
 import { EmailList } from "./Emaillist.jsx";
 import { PriceTrend } from "./PriceTrend.jsx";
 
-export const InvoiceDetails = ({ invoice, onNext, onPrev, activeTab, onTabChange }) => {
+export const InvoiceDetails = ({
+  invoice,
+  onNext,
+  onPrev,
+  activeTab,
+  onTabChange,
+}) => {
   if (!invoice) {
     return (
       <div className="flex items-center justify-center h-full text-muted-foreground">
@@ -39,10 +41,11 @@ export const InvoiceDetails = ({ invoice, onNext, onPrev, activeTab, onTabChange
 
   const statusStyles = {
     "Manual Review": "bg-yellow-50 text-yellow-800 border-yellow-100",
-    "Processing": "bg-blue-50 text-blue-800 border-blue-100",
-    "Approved": "bg-emerald-50 text-emerald-800 border-emerald-100",
+    Processing:
+      "bg-purple-50 text-purple-600 border border-purple-200 rounded-full",
+    Approved: "bg-sky-50 text-sky-600 border border-sky-200 rounded-full",
     "AI Approved": "bg-green-50 text-green-800 border-green-100",
-    "Flagged": "bg-red-50 text-red-800 border-red-100",
+    Flagged: "bg-red-50 text-red-800 border-red-100",
   };
 
   const handlePrevTab = () => {
@@ -64,11 +67,25 @@ export const InvoiceDetails = ({ invoice, onNext, onPrev, activeTab, onTabChange
       case "Invoice Specifics":
         return <InvoiceSpecificsTable products={invoice.products || []} />;
       case "PO":
-        return <POList pos={invoice.pos || []} />;
+        return (
+          <ConnectedList type="pos" data={invoice.pos || []} onAdd={() => {}} />
+        );
       case "Quotes":
-        return <QuoteList quotes={invoice.quotes || []} />;
+        return (
+          <ConnectedList
+            type="quotes"
+            data={invoice.quotes || []}
+            onAdd={() => {}}
+          />
+        );
       case "Jobs":
-        return <JobList jobs={invoice.jobs || []} />;
+        return (
+          <ConnectedList
+            type="jobs"
+            data={invoice.jobs || []}
+            onAdd={() => {}}
+          />
+        );
       case "Emails":
         return <EmailList emails={invoice.emails || []} />;
       case "Price Trend":
@@ -98,28 +115,24 @@ export const InvoiceDetails = ({ invoice, onNext, onPrev, activeTab, onTabChange
               </span>
             )}
           </div>
-          <div className="flex items-center gap-2">
-            <Button
+          <div className="inline-flex border border-gray-300 rounded-md overflow-hidden">
+            <button
               onClick={handlePrevTab}
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 p-0 border border-gray-300 rounded-md hover:bg-gray-100"
+              className="flex items-center justify-center w-8 h-8 bg-white hover:bg-gray-50 border-r border-gray-300"
             >
               <ChevronLeft className="w-4 h-4 text-gray-700" />
-            </Button>
-            <Button
+            </button>
+            <button
               onClick={handleNextTab}
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 p-0 border border-gray-300 rounded-md hover:bg-gray-100"
+              className="flex items-center justify-center w-8 h-8 bg-white hover:bg-gray-50"
             >
               <ChevronRight className="w-4 h-4 text-gray-700" />
-            </Button>
+            </button>
           </div>
         </div>
 
         {/* Tabs */}
-        <div className="flex items-center gap-6 px-6 text-sm overflow-x-auto">
+        <div className="flex items-center gap-6 px-6 text-sm overflow-x-auto custom-scroll">
           {tabs.map((tab) => (
             <button
               key={tab}
@@ -136,8 +149,8 @@ export const InvoiceDetails = ({ invoice, onNext, onPrev, activeTab, onTabChange
         </div>
       </div>
 
-      {/* Body */}
-      <div className="flex-1 overflow-y-auto px-6 py-4 text-sm">
+      {/* Content */}
+      <div className="flex-1 overflow-y-auto custom-scroll px-6 py-4 text-sm">
         {renderTabContent()}
       </div>
 

@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* AI Invoicing Design System */
 
 @layer base {
   :root {
@@ -106,7 +105,7 @@
 
 @layer base {
   * {
-    /* stylelint-disable-next-line */
+
     @apply border-border;
   }
 
@@ -115,7 +114,6 @@
   }
 }
 
-/* Custom Scrollbar */
 .custom-scrollbar::-webkit-scrollbar {
   height: 6px;
 }
@@ -130,9 +128,9 @@
   background-color: #9ca3af;
 }
 .custom-scroll {
-  scrollbar-width: none;           /* Firefox */
-  -ms-overflow-style: none;        /* IE/Edge */
+  scrollbar-width: none;           
+  -ms-overflow-style: none;        
 }
 .custom-scroll::-webkit-scrollbar {
-  display: none;                   /* Chrome/Safari */
+  display: none;                   
 }

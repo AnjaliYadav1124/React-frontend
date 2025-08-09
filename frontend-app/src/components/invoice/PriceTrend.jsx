@@ -1,10 +1,10 @@
-// components/PriceTrend.jsx
 import {
   LineChart,
   Line,
   XAxis,
   YAxis,
   Tooltip,
+  CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
 
@@ -25,71 +25,106 @@ const data = [
 
 export const PriceTrend = () => {
   return (
-    <div className="bg-white rounded-md border p-4 text-sm">
-      {/* Header with Legends */}
-      <div className="flex items-center justify-between mb-2">
-        <h3 className="font-medium text-gray-800">
-          Price Trend for 'Cabling Kit'
-        </h3>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-1 text-xs text-gray-600">
-            <span className="w-2.5 h-2.5 rounded-full bg-orange-500"></span>
-            Legend 1
-          </div>
-          <div className="flex items-center gap-1 text-xs text-gray-600">
-            <span className="w-2.5 h-2.5 rounded-full bg-cyan-500"></span>
-            Legend 2
-          </div>
-          <div className="flex items-center gap-1 text-xs text-gray-600">
-            <span className="w-2.5 h-2.5 rounded-full bg-yellow-400"></span>
-            Legend 3
+    <>
+      <div className="bg-white rounded-lg border border-gray-200 p-4 text-sm shadow-sm">
+
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="font-medium text-gray-800">Price Trend for ‘Cabling Kit’</h3>
+          <div className="flex items-center gap-4">
+            <span className="flex items-center gap-1 text-xs text-gray-600">
+              <span className="w-2.5 h-2.5 rounded-full bg-orange-500" /> Legend 1
+            </span>
+            <span className="flex items-center gap-1 text-xs text-gray-600">
+              <span className="w-2.5 h-2.5 rounded-full bg-cyan-500" /> Legend 2
+            </span>
+            <span className="flex items-center gap-1 text-xs text-gray-600">
+              <span className="w-2.5 h-2.5 rounded-full bg-yellow-400" /> Legend 3
+            </span>
           </div>
         </div>
-      </div>
 
-      {/*  Scrollable Chart Wrapper */}
-      <div className="overflow-x-auto">
-        <div className="min-w-[700px] h-[200px]">
+        <div className="h-[220px]">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={data}>
-              <XAxis dataKey="time" stroke="#888" fontSize={12} />
-              <YAxis
-                tickFormatter={(v) => `$${v.toLocaleString()}`}
-                stroke="#888"
+            <LineChart
+              data={data}
+              margin={{ top: 5, right: 40, left: 10, bottom: 0 }}
+            >
+              <CartesianGrid stroke="#E6E9ED" />
+              <XAxis
+                dataKey="time"
+                stroke="#9CA3AF"
                 fontSize={12}
-                width={60}
-                tick={{ textAnchor: "end", dx: 10 }}
+                tickLine={false}
+                axisLine={false}
               />
-              <Tooltip />
+              <YAxis
+                yAxisId="left"
+                stroke="#9CA3AF"
+                fontSize={12}
+                tickLine={false}
+                axisLine={false}
+                width={46}
+                domain={[0, 15000]}
+                ticks={[1000, 5000, 10000, 15000]}
+                tickFormatter={(v) => v.toLocaleString()}
+              />
+              <YAxis
+                yAxisId="right"
+                orientation="right"
+                stroke="#9CA3AF"
+                fontSize={12}
+                tickLine={false}
+                axisLine={false}
+                width={46}
+                domain={[0, 1000]}
+                ticks={[100, 500, 1000]}
+                tickFormatter={(v) => `$${v.toLocaleString()}`}
+              />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "#fff",
+                  border: "1px solid #E5E7EB",
+                  borderRadius: 6,
+                  fontSize: 12,
+                  color: "#374151",
+                  boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
+                }}
+              />
               <Line
+                yAxisId="left"
                 type="monotone"
                 dataKey="l1"
                 stroke="#f97316"
                 strokeWidth={2}
                 dot={false}
+                activeDot={{ r: 3 }}
               />
               <Line
+                yAxisId="left"
                 type="monotone"
                 dataKey="l2"
                 stroke="#06b6d4"
                 strokeWidth={2}
                 dot={false}
+                activeDot={{ r: 3 }}
               />
               <Line
+                yAxisId="right"
                 type="monotone"
                 dataKey="l3"
                 stroke="#facc15"
                 strokeWidth={2}
                 dot={false}
+                activeDot={{ r: 3 }}
               />
             </LineChart>
           </ResponsiveContainer>
         </div>
       </div>
 
-      {/* Insights section */}
-      <div className="mt-6">
-        <h4 className="font-semibold text-sm text-gray-800 mb-2">
+
+      <div className="mt-4">
+        <h4 className="font-bold text-lg text-gray-800 mb-2">
           Insights from the Chart
         </h4>
         <ul className="list-disc pl-5 text-gray-600 text-sm space-y-1">
@@ -102,6 +137,7 @@ export const PriceTrend = () => {
           </li>
         </ul>
       </div>
-    </div>
+    </>
   );
 };
+
