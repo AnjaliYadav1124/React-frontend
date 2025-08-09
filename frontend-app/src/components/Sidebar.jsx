@@ -36,14 +36,14 @@ const footerItems = [
 
 export const Sidebar = () => {
   return (
-    <aside className="flex flex-col w-16 h-screen bg-[#f8f9fb] border-r border-border items-center py-4">
+    <aside className="flex flex-col w-16 h-screen bg-[#f4f0fb] border-r border-border items-center py-4">
       {/* Logo */}
       <div className="w-10 h-10 rounded-lg bg-[#9333ea] flex items-center justify-center mb-6">
         <div className="w-5 h-5 rounded-[4px] bg-white"></div>
       </div>
 
   
-      <div className="flex-1 flex flex-col items-center gap-2">
+      <div className="flex-1 flex flex-col items-center gap-0.6">
         {topItems.map((item, index) => {
           const isActive = item.label === activeItem;
           return (
@@ -64,7 +64,7 @@ export const Sidebar = () => {
       </div>
 
       {/* Footer Icons */}
-      <div className="flex flex-col items-center gap-2 mb-3">
+      <div className="flex flex-col items-center gap-0.6 mb-3">
         {footerItems.map((item, index) => (
           <button
             key={index}

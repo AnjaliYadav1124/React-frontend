@@ -20,17 +20,51 @@ const getStatusClass = (status) => {
   }
 };
 
-export const InvoiceList = ({ invoices, onSelectInvoice, selectedInvoiceId }) => {
+export const InvoiceList = ({
+  invoices,
+  onSelectInvoice,
+  selectedInvoiceId,
+  activeTab, // passed from parent (e.g. "All" | "Review" | "Approved" | "Archived")
+}) => {
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredInvoices = invoices.filter((invoice) => {
+  // 1) Filter by active tab (status)
+  const tabFilteredInvoices = invoices.filter((invoice) => {
+    const status = (invoice.status || "").toLowerCase().trim();
+
+    if (!activeTab || activeTab === "All") return true;
+
+    if (activeTab === "Review") {
+      // Match exact "manual review" or anything containing both words 'manual' and 'review'
+      return (
+        status === "manual review" ||
+        status.includes("manual review") ||
+        (status.includes("manual") && status.includes("review"))
+      );
+    }
+
+    if (activeTab === "Approved") {
+      // Matches "approved", "ai approved", "pre-approved", etc.
+      return status.includes("approved");
+    }
+
+    if (activeTab === "Archived") {
+      return status.includes("archived");
+    }
+
+    // fallback: if new tabs are added, show all
+    return true;
+  });
+
+  // 2) Then apply search filter
+  const filteredInvoices = tabFilteredInvoices.filter((invoice) => {
     const term = searchTerm.toLowerCase();
     return (
-      invoice.company.toLowerCase().includes(term) ||
-      invoice.poNumber.toLowerCase().includes(term) ||
-      invoice.jobNumber.toLowerCase().includes(term) ||
-      invoice.status.toLowerCase().includes(term) ||
-      invoice.date.toLowerCase().includes(term)
+      invoice.company?.toLowerCase().includes(term) ||
+      invoice.poNumber?.toLowerCase().includes(term) ||
+      invoice.jobNumber?.toLowerCase().includes(term) ||
+      invoice.status?.toLowerCase().includes(term) ||
+      invoice.date?.toLowerCase().includes(term)
     );
   });
 
